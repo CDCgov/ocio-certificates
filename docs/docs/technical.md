@@ -49,7 +49,7 @@ Without it, the laptop won't trust the self-signed certificates used by the numb
 
 ## Usage
 
-To download and use the [certificate bundles](../data/bundle/README.md) properly, we have to understand the type of clients we plan on using.
+To download and use the [certificate bundles](../data/README.md) properly, we have to understand the type of clients we plan on using.
 
 Operating Systems (ex. Windows, Ubuntu, Redhat) and programming language clients (ex. Python's requests library, Java's Keystore, wget, curl) may use different truststore in determining the validity of a server's certificate. Teams have to explicitly add these certificate bundles into the trust store that these clients are using to validate the chain of trust.
 
