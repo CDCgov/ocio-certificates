@@ -32,9 +32,9 @@ For most cases, [trusting just the root certificate](https://security.stackexcha
 
 ## Windows Operating System - Certificate Stores
 
-The Windows Operating System includes several [certificate stores](https://learn.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/wcf/certificate-of-clientcertificate-element?redirectedfrom=MSDN) to store digital certificates in X.509 for different purposes. These certificates control what the typical CDC laptop trusts. The responsibility of modifying certificates falls under the responsibility of the OCIO Identity and Access Management branch (IAMB) and the [Active Directory](mailto:adhelpdsk@cdc.gov) team.
+The Windows Operating System includes several [certificate stores](https://learn.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/wcf/certificate-of-clientcertificate-element?redirectedfrom=MSDN) to store digital certificates in X.509 for different purposes. These certificates control what the typical CDC laptop trusts. The responsibility of modifying certificates falls under the responsibility of the OCIO Active Directory team.
 
-Without it, the laptop won't trust the self-signed certificates used by the number of intranet websites (ex. intranet.cdc.gov, git.cdc.gov) and certificates re-signed by intermediate firewall devices such as ZScaler and Palo Alto devices serving as a [transparent man-in-the-middle https proxy](https://docs.mitmproxy.org/stable/concepts-howmitmproxyworks/.#transparent-https).
+Without it, the laptop won't trust the self-signed certificates used by the number of intranet websites and certificates re-signed by intermediate firewall devices serving as a [transparent man-in-the-middle https proxy](https://docs.mitmproxy.org/stable/concepts-howmitmproxyworks/.#transparent-https).
 
 | Certificate Storage    | Usage                                                               |
 | ---------------------- | ------------------------------------------------------------------- |
@@ -49,7 +49,7 @@ Without it, the laptop won't trust the self-signed certificates used by the numb
 
 ## Usage
 
-To download and use the [certificate bundles](../data/bundle/README.md) properly, we have to understand the type of clients we plan on using.
+To download and use the [certificate bundles](../data/README.md) properly, we have to understand the type of clients we plan on using.
 
 Operating Systems (ex. Windows, Ubuntu, Redhat) and programming language clients (ex. Python's requests library, Java's Keystore, wget, curl) may use different truststore in determining the validity of a server's certificate. Teams have to explicitly add these certificate bundles into the trust store that these clients are using to validate the chain of trust.
 
