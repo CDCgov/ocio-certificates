@@ -5,6 +5,7 @@
 1. [Linux - Operating System Certificate Store](#linux-based-systems)
 1. [Ubuntu](#ubuntu)
 1. [Redhat](#redhat)
+1. [Fedora](#fedora)
 1. [Python](#python)
 1. [R](#r)
 1. [Java](#java)
@@ -94,6 +95,15 @@ sudo update-ca-certificates
 
 ```bash
 sudo cp min-cdc-bundle-ca.crt /etc/pki/ca-trust/source/whitelist/
+sudo update-ca-trust
+```
+
+### Fedora
+
+[Fedora](https://docs.fedoraproject.org) uses the [ca-certificates](https://wiki.mozilla.org/CA) - which is the Mozilla package by default. Assuming `min-cdc-bundle-ca.crt` to be the certificate, this script snippet will install the certificate bundle to the Fedora operating system's trust store. This guidance came from [Fedora's main documentation](https://docs.fedoraproject.org/en-US/quick-docs/using-shared-system-certificates/#_adding_new_certificates).
+
+```bash
+sudo cp min-cdc-bundle-ca.crt /etc/pki/ca-trust/source/anchors/
 sudo update-ca-trust
 ```
 
