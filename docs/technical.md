@@ -2,6 +2,7 @@
 
 ## Quick Access
 
+1. [Windows](#windows-operating-system---certificate-stores)
 1. [Linux - Operating System Certificate Store](#linux-based-systems)
 1. [Ubuntu](#ubuntu)
 1. [Redhat](#redhat)
@@ -17,7 +18,7 @@
 1. [Wget](#gnu-wget)
 1. [Git](#git)
 
-## Technical Usage
+## Technical Guide
 
 We manage [certificates as part of public key infrastructure](https://cheapsslsecurity.com/blog/what-are-root-certificates-and-intermediate-certificates/) to protect data and communication between a client and a server. A server presenting a certificate to the client will often include the root certificate, the intermediate certificate, and a leaf or server certificate.
 
@@ -30,6 +31,12 @@ The song and dance of certificate validation starts at the end entity or the lea
 <img src="./root-certificates-and-intermediate-certificates.png" alt="The song and dance of certificate validation" width="600"/>
 
 For most cases, [trusting just the root certificate](https://security.stackexchange.com/questions/83874/in-order-to-trust-the-digital-certificate-does-immediate-ca-cert-also-needs-to) is the absolute minimum for a client to properly connect to a server.
+
+## Usage
+
+To download and use the [certificate bundles](../data/README.md) properly, we have to understand the type of clients we plan on using.
+
+Operating Systems (ex. Windows, Ubuntu, Redhat) and programming language clients (ex. Python's requests library, Java's Keystore, wget, curl) may use different truststore in determining the validity of a server's certificate. Teams have to explicitly add these certificate bundles into the trust store that these clients are using to validate the chain of trust.
 
 ## Windows Operating System - Certificate Stores
 
@@ -48,11 +55,12 @@ Without it, the laptop won't trust the self-signed certificates used by the numb
 | TrustedPeople          | Certificate store for directly trusted people and resources.        |
 | TrustedPublisher       | Certificate store for directly trusted publishers.                  |
 
-## Usage
+We have encountered issues with [Powershell based curl](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.5) which is an _alias_ to Invoke-WebRequest where it fails with an error "Could not create SSL/TLS secure channel". We can fix curl by running the Invoke-WebRequest and forcing a reasonable security protocol such as TLS 1.2.
 
-To download and use the [certificate bundles](../data/README.md) properly, we have to understand the type of clients we plan on using.
-
-Operating Systems (ex. Windows, Ubuntu, Redhat) and programming language clients (ex. Python's requests library, Java's Keystore, wget, curl) may use different truststore in determining the validity of a server's certificate. Teams have to explicitly add these certificate bundles into the trust store that these clients are using to validate the chain of trust.
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+Invoke-WebRequest -Uri https://www.google.com
+```
 
 ## Linux Based Systems
 
