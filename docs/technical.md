@@ -55,7 +55,11 @@ Without it, the laptop won't trust the self-signed certificates used by the numb
 | TrustedPeople          | Certificate store for directly trusted people and resources.        |
 | TrustedPublisher       | Certificate store for directly trusted publishers.                  |
 
-We have encountered issues with [Powershell based curl](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.5) which is an _alias_ to Invoke-WebRequest where it fails with an error "Could not create SSL/TLS secure channel". We can fix curl by running the Invoke-WebRequest and forcing a reasonable security protocol such as TLS 1.2.
+> [!NOTE]
+> The `curl` command in Powershell is an alias to Powershell's **Invoke-WebRequest**.
+> [curl.exe](#curl) is the normal version of curl.
+
+We have encountered issues with [Powershell based curl](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-webrequest?view=powershell-7.5), an _alias_ to Invoke-WebRequest where it fails with an error "Could not create SSL/TLS secure channel". We can fix curl by running the Invoke-WebRequest and forcing a reasonable security protocol such as TLS 1.2.
 
 ```powershell
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -364,6 +368,25 @@ curl -vvv https://google.com
 ```
 
 The **export** command for environment variables is often placed in the **~/.bashrc** file so that a terminal will start with environment variable set.
+
+#### Curl in Windows
+
+[Curl.exe](https://curl.se/windows/) uses a Microsoft built binding for TLS connections called [SChannel](https://learn.microsoft.com/en-us/windows/win32/com/schannel), whereas most Linux variants for curl favor [OpenSSL](https://openssl-library.org/source/) as the binding.
+
+We encountered an issue with [SChannel](https://learn.microsoft.com/en-us/windows/win32/com/schannel) where it will fail upon not finding a certificate revocation server with the following error on a simple curl with a trusted certificate bundle:
+
+```bash
+curl -vvv --cacert min-cdc-bundle-ca.crt https://google.com
+
+curl: (60) schannel: CertGetCertificateChain trust error CERT_TRUST_REVOCATION_STATUS_UNKNOWN
+More details here: https://curl.se/docs/sslcerts.html
+```
+
+To fix this problem, add [--ssl-revoke-best-effort](https://curl.se/docs/manpage.html#--ssl-revoke-best-effort) for a curl binding of SChannel to ignore issues reaching a certificate revocation server.
+
+```bash
+curl -vvv --ssl-revoke-best-effort --cacert min-cdc-bundle-ca.crt https://google.com
+```
 
 ### GNU Wget
 
