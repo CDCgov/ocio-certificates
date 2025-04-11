@@ -1,6 +1,6 @@
 # Certificate Infrastructure
 
-[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](https://choosealicense.com/licenses/mit/)
+[![License](https://img.shields.io/badge/License-CC0_1.0-blue?style=for-the-badge)](https://choosealicense.com/licenses/cc0-1.0/)
 ![commit history](https://img.shields.io/github/last-commit/cdcgov/ocio-certificates?label=commits&style=for-the-badge)
 
 > [!TIP]
