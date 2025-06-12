@@ -125,6 +125,28 @@ There are a number of ways Python can work with a trust store.
 
 - [Python 3.10 has an experimental trust store](https://stackoverflow.com/questions/39356413/how-to-add-a-custom-ca-root-certificate-to-the-ca-store-used-by-pip-in-windows)
 
+#### Python 3.13 Strict Verification
+
+If using Python 3.13 or versions above, 3.13 [verifies server certificate in strict mode](https://docs.python.org/3/library/ssl.html#context-creation). As a result, when client requests from Python receives a server certificate that do not validate in strict mode, such as missing an authority key identifier, the client will fail the request. This may also happen if a man-in-the-middle firewall or proxies do not provide a proper certificate when [re-issuing an intercepted server certificate](https://docs.mitmproxy.org/stable/concepts/how-mitmproxy-works/#explicit-https).
+
+This is an example of one of the errors for a server certificate missing the Authority Key Identifier, checked using certificate validation strict mode.
+
+```bash
+Error connecting to Google: HTTPSConnectionPool(host='news.google.com', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Authority Key Identifier (_ssl.c:1028)')))
+```
+
+To temporarily fix this, we can lower the "strictness" of the validation back to what it was like during Python 3.12. The proper fix is to contact the proxy or firewall team or the webserver's hosting provider to fix their server certificate.
+
+```bash
+import ssl
+import requests
+
+ctx = ssl.create_default_context()
+ctx.verify_flags &= ~ssl.VERIFY_X509_STRICT
+
+response = requests.get('https://news.google.com', verify=context)
+```
+
 #### Method 1: Set the Environment Variable (for Requests library only)
 
 - For applications using the [requests](https://pypi.org/project/requests/) library in Python, with the certificate bundle called `min-cdc-bundle-ca.crt` in the example, we can set the environment variable: `REQUESTS_CA_BUNDLE` and `SSL_CERT_FILE` to the certificate bundle's path.
