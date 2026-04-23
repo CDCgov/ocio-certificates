@@ -17,6 +17,7 @@
 1. [Curl](#curl)
 1. [Wget](#gnu-wget)
 1. [Git](#git)
+1. [Eclipse and Github Copilot](#eclipse-and-github-copilot-plugin)
 
 ## Technical Guide
 
@@ -432,6 +433,26 @@ git config --global http.sslcainfo /etc/ssl/certs/ca-certificates.crt
 
 > [!TIP]
 > Alternatively, using SSH instead of HTTPs to get to the Git server will not require this as firewalls cannot intercept SSH traffic in the same manner.
+
+### Eclipse and Github Copilot Plugin
+
+The [Official Github Copilot Plugin in Eclipse IDE's marketplace](https://marketplace.eclipse.org/content/github-copilot) is a [Nodejs](#nodejs) based application. For the client within the Github Copilot plugin to route HTTPS traffic through corporate networks that perform break-and-inspect of traffic, the environment variable `NODE_EXTRA_CA_CERTS` can be set to the path of the certificate.
+
+In Linux, export the environment variable, if that is the path of the certificate:
+
+```bash
+export NODE_EXTRA_CA_CERTS='opt/certs/min-cdc-bundle-ca.crt'
+```
+
+In Windows (no elevated privilege or administrative rights required), edit the **user variables** for your user:
+
+1. Search for "Control Panel" and open it.
+1. Navigate to "User Accounts", and then on the left, click on "Change my Environment Variables".
+   <img src="./img/control-panel-change-env-variable.png" alt="Control Panel - Change Environment Variables" width="600"/>
+1. A dialog box should pop, use the top box to add **user variables** by clicking on "New...".
+1. Add **NODE_EXTRA_CA_CERTS** as the variable, and the path of the certificate to trust as the value. Click "Ok" to save it.
+   <img src="./img/edit-user-variables.png" alt="Edit User Variables" width="600"/>
+1. Restart Eclipse and run Github Copilot plugin to test connectivity.
 
 ## Website for Testing
 
